@@ -22,8 +22,10 @@ def read_branch(csv_path):
         branch_info = {
             'branch': row['지점'],
             'branchName': row['지점명'],
-            'latitude': float(row['좌표'].split(',')[0].strip()),
-            'longitude': float(row['좌표'].split(',')[1].strip())
+            'latitude': float(row['위도']),
+            'longitude': float(row['경도'])
+            # 'latitude': float(row['좌표'].split(',')[0].strip()),
+            # 'longitude': float(row['좌표'].split(',')[1].strip())
         }
         branches_list.append(branch_info)
 
