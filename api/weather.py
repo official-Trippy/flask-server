@@ -24,8 +24,6 @@ def read_branch(csv_path):
             'branchName': row['지점명'],
             'latitude': float(row['위도']),
             'longitude': float(row['경도'])
-            # 'latitude': float(row['좌표'].split(',')[0].strip()),
-            # 'longitude': float(row['좌표'].split(',')[1].strip())
         }
         branches_list.append(branch_info)
 
@@ -37,14 +35,18 @@ def check_country(latitude, longitude):
         url = f'{google_url}?latlng={latitude},{longitude}&key={google_maps_api_key}'
         response = requests.get(url)
         data = response.json()
+        location_info = {}
 
         if data['status'] == 'OK':
             # 결과에서 국가 정보 가져오기
             for result in data['results']:
+                location_info['area'] = result['address_components'][3]['long_name']
+
                 for component in result['address_components']:
                     if 'country' in component['types']:
                         country_name = component['long_name']
-                        return country_name
+                        location_info['country_name'] = country_name
+                        return location_info
 
         return jsonify({'error': 'Unable to determine country'}), 400
 

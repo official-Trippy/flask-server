@@ -14,7 +14,8 @@ def weather():
         date = request.args.get('date')
 
         # 국가 확인
-        if check_country(latitude, longitude) != "South Korea":
+        location_info = check_country(latitude, longitude)
+        if location_info['country_name'] != "South Korea":
             dto = ErrorReasonDTO(False, "NATION4001", "NO_PERMISSION_NATION")
             return jsonify(dto.__dict__), 403
 
@@ -31,6 +32,8 @@ def weather():
         # 날씨 데이터 추출 및 처리
         weather_data = weather_response.json()['response']['body']['items']['item']
         result = get_weather_info(weather_data)
+        result['date'] = date
+        result['area'] = location_info['area']
 
         # 성공적인 응답
         dto = ReasonDTO(True, "COMMON200", "SUCCESS", result)
