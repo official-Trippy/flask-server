@@ -23,11 +23,17 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Decode and save CSV file
-      env:
-        BRANCH_INFO_CSV: ${{ secrets.BRANCH_INFO_CSV }}
+    - name: Make CSV file
       run: |
-        echo $BRANCH_INFO_CSV | base64 --decode > branchInfo.csv
+        touch branchInfo.csv
+        echo "${{ secrets.BRANCH_INFO_CSV }}" > branchInfo.csv
+      shell: bash
+
+    - name: Make env
+      run: |
+          touch .env
+          echo "${{ secrets.ENV_FILE_CONTENT }}" > .env
+      shell: bash
 
     ## DockerHub 로그인
     - name: Login to DockerHub
