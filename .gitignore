@@ -160,7 +160,7 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
-data/branchInfo.csv
+branchInfo.csv
 
 
 # PyCharm

@@ -19,7 +19,7 @@ def weather():
             return jsonify(dto.__dict__), 403
 
         # 가장 가까운 위치의 관측소 찾기
-        branches = read_branch('data/branchInfo.csv')
+        branches = read_branch('branchInfo.csv')
         nearest_branch = get_nearest_location(branches, latitude, longitude)
 
         # 날씨 정보 요청
