@@ -95,16 +95,12 @@ def get_weather_info(weather_list):
     result['minTemp'] = minTa
 
     if ddMes != '' or sumRn != '':
-        # sumRn >= 0.1mm -> 비
-        if sumRn != '':
-            if float(sumRn) >= 0.1:
-                result['status'] = 'rain'
-
-            # ddMes >= 1cm -> 눈
-        if ddMes != '':
-            if float(ddMes) >= 1:
-                result['status'] = 'snow'
-
+        if sumRn != '' and float(sumRn) >= 0.1:
+            result['status'] = 'rain'
+        elif ddMes != '' and float(ddMes) >= 1:
+            result['status'] = 'snow'
+        else:
+            result['status'] = 'cloudy'
     else:
         if avgTca < 6:
             result['status'] = 'sunny'
