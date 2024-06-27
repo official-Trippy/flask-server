@@ -29,10 +29,20 @@ jobs:
         echo "${{ secrets.BRANCH_INFO_CSV }}" > branchInfo.csv
       shell: bash
 
+    - name: Check branchInfo.csv content
+      run: |
+        cat branchInfo.csv
+      shell: bash
+
     - name: Make env
       run: |
           touch .env
           echo "${{ secrets.ENV_FILE_CONTENT }}" > .env
+      shell: bash
+
+    - name: Check .env file content
+      run: |
+        cat .env
       shell: bash
 
     ## DockerHub 로그인
