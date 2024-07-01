@@ -81,7 +81,7 @@ def get_weather_list(branch, date):
         return None
 
 def get_weather_info(weather_list):
-    result = {}
+    result = ""
 
     ddMes = weather_list[0]['ddMes']
     sumRn = weather_list[0]['sumRn']
@@ -90,23 +90,23 @@ def get_weather_info(weather_list):
     minTa = weather_list[0]['minTa']
     maxTa = weather_list[0]['maxTa']
 
-    result['avgTemp'] = avgTa
-    result['maxTemp'] = maxTa
-    result['minTemp'] = minTa
+    result += avgTa
+    result += "," + maxTa
+    result += "," + minTa
 
     if ddMes != '' or sumRn != '':
         if sumRn != '' and float(sumRn) >= 0.1:
-            result['status'] = 'rain'
+            result += ",rain"
         elif ddMes != '' and float(ddMes) >= 1:
-            result['status'] = 'snow'
+            result += ",snow"
         else:
-            result['status'] = 'cloudy'
+            result += ",cloudy"
     else:
         if avgTca < 6:
-            result['status'] = 'sunny'
+            result += ",sunny"
         elif 6 <= avgTca < 9:
-            result['status'] = 'mostly_cloudy'
-        elif 9 <= avgTca <= 10:
-            result['status'] = 'cloudy'
+            result += ",mostly_cloudy"
 
+        elif 9 <= avgTca <= 10:
+            result += ",cloudy"
     return result

@@ -32,12 +32,10 @@ def weather():
         # 날씨 데이터 추출 및 처리
         weather_data = weather_response.json()['response']['body']['items']['item']
         result = get_weather_info(weather_data)
-        result['date'] = date
-        result['area'] = location_info['area']
+        result += "," +  location_info['area']
+        print(result)
 
-        # 성공적인 응답
-        dto = ReasonDTO(True, "COMMON200", "SUCCESS", result)
-        return jsonify(dto.__dict__), 200
+        return result
 
     except Exception as e:
         # 예외 처리
