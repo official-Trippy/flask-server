@@ -16,8 +16,8 @@ def weather():
         # 국가 확인
         location_info = check_country(latitude, longitude)
         if location_info['country_name'] != "South Korea":
-            dto = ErrorReasonDTO(False, "NATION4001", "NO_PERMISSION_NATION")
-            return jsonify(dto.__dict__), 403
+            # dto = ErrorReasonDTO(False, "NATION4001", "NO_PERMISSION_NATION")
+            return "4001"
 
         # 가장 가까운 위치의 관측소 찾기
         branches = read_branch('branchInfo.csv')
@@ -27,7 +27,7 @@ def weather():
         weather_response = get_weather_list(nearest_branch['branch'], date)
         if weather_response.status_code != 200:
             dto = ErrorReasonDTO(False, "WEATHER4002", "ERROR_WHILE_GET_WEATHER")
-            return jsonify(dto.__dict__), 500
+            return "500"
 
         # 날씨 데이터 추출 및 처리
         weather_data = weather_response.json()['response']['body']['items']['item']
@@ -41,4 +41,4 @@ def weather():
         # 예외 처리
         error_msg = f"Unexpected error occurred: {str(e)}"
         dto = ErrorReasonDTO(False, "COMMON500", "INTERNAL_SERVER_ERROR", error_msg)
-        return jsonify(dto.__dict__), 500
+        return "500"
