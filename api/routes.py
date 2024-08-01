@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify, Response
 import json
 from .weather import get_weather_list, get_nearest_location, read_branch, check_country, get_weather_info
 from response_dto import ReasonDTO, ErrorReasonDTO
+from .country import get_country_data, get_full_address
 
 api_bp = Blueprint('api', __name__)
 
@@ -42,3 +43,20 @@ def weather():
         error_msg = f"Unexpected error occurred: {str(e)}"
         dto = ErrorReasonDTO(False, "COMMON500", "INTERNAL_SERVER_ERROR", error_msg)
         return "500"
+
+@api_bp.route('/location', methods=['GET'])
+def location():
+    try:
+        location = request.args.get('location')
+        data = get_full_address(location)
+        return data
+
+    except Exception as e:
+        # 예외 처리
+        error_msg = f"Unexpected error occurred: {str(e)}"
+        return jsonify({
+            'success': False,
+            'error_code': 'COMMON500',
+            'message': 'INTERNAL_SERVER_ERROR',
+            'detail': error_msg
+        }), 500
