@@ -3,6 +3,7 @@ import json
 from .weather import get_weather_list, get_nearest_location, read_branch, check_country, get_weather_info
 from response_dto import ReasonDTO, ErrorReasonDTO
 from .country import get_country_data, get_full_address
+from urllib.parse import unquote
 
 api_bp = Blueprint('api', __name__)
 
@@ -48,9 +49,18 @@ def weather():
 def location():
     try:
         location = request.args.get('location')
-        data = get_full_address(location)
-        return data
-
+        if location:
+            decoded_location = unquote(location)
+            print(f"location: {decoded_location}")  # 디버깅을 위한 로그 추가
+            data = get_full_address(decoded_location)
+            return data
+        else:
+            return jsonify({
+                'success': False,
+                'error_code': 'COMMON400',
+                'message': 'BAD_REQUEST',
+                'detail': 'Location parameter is missing'
+            }), 400
     except Exception as e:
         # 예외 처리
         error_msg = f"Unexpected error occurred: {str(e)}"
