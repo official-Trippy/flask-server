@@ -5,7 +5,10 @@ import re
 import MeCab
 
 # 형태소 분석기 초기화
-mecab = MeCab.Tagger("-r /opt/homebrew/etc/mecabrc -d /opt/homebrew/lib/mecab/dic/mecab-ko-dic")
+# 로컬
+#mecab = MeCab.Tagger("-r /opt/homebrew/etc/mecabrc -d /opt/homebrew/lib/mecab/dic/mecab-ko-dic")
+#서버
+mecab = MeCab.Tagger("-r /usr/local/etc/mecabrc -d /usr/local/lib/mecab/dic/mecab-ko-dic")
 # 연속된 문자열 제거 함수
 def remove_consecutive_words(s):
     result = []
