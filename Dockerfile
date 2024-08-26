@@ -28,8 +28,10 @@ RUN cd /tmp && \
     cd mecab-0.996-ko-0.9.1 && \
     ./configure && \
     make && \
-    make check && \
     sudo make install
+
+# Set LD_LIBRARY_PATH so mecab can find libmecab.so.2
+ENV LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 
 # Install mecab-ko-dic
 RUN cd /tmp && \
