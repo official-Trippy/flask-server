@@ -27,7 +27,6 @@ RUN git clone https://bitbucket.org/eunjeon/mecab-ko.git /tmp/mecab-ko \
 # Clone and install mecab-ko-dic
 RUN git clone https://bitbucket.org/eunjeon/mecab-ko-dic.git /tmp/mecab-ko-dic \
     && cd /tmp/mecab-ko-dic \
-    && ./configure \
     && make \
     && make install
 
