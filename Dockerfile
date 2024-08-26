@@ -24,11 +24,10 @@ RUN git clone https://bitbucket.org/eunjeon/mecab-ko.git /tmp/mecab-ko \
     && make \
     && make install
 
-# Clone and install mecab-ko-dic
+# Clone and install mecab-ko-dic using the install.sh script
 RUN git clone https://bitbucket.org/eunjeon/mecab-ko-dic.git /tmp/mecab-ko-dic \
     && cd /tmp/mecab-ko-dic \
-    && make \
-    && make install
+    && ./install.sh
 
 # Ensure MeCab finds the correct mecabrc and dictionary
 RUN ln -s /usr/local/etc/mecabrc /etc/mecabrc
