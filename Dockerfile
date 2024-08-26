@@ -13,22 +13,20 @@ RUN apt-get update && apt-get install -y \
     xz-utils \
     git \
     build-essential \
+    automake \
+    autoconf \
     && apt-get clean
 
-# Install mecab-python3
-RUN pip install mecab-python3
-
-# Clone and install mecab-ko and mecab-ko-dic
+# Clone and install mecab-ko
 RUN git clone https://bitbucket.org/eunjeon/mecab-ko.git /tmp/mecab-ko \
     && cd /tmp/mecab-ko \
-    && ./autogen.sh \
     && ./configure \
     && make \
     && make install
 
+# Clone and install mecab-ko-dic
 RUN git clone https://bitbucket.org/eunjeon/mecab-ko-dic.git /tmp/mecab-ko-dic \
     && cd /tmp/mecab-ko-dic \
-    && ./autogen.sh \
     && ./configure \
     && make \
     && make install
