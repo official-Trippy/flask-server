@@ -1,17 +1,21 @@
-# Dockerfile
-FROM python:3.10-slim
+# 베이스 이미지로 Python 3.9 사용
+FROM python:3.9
 
+# 작업 디렉토리 설정
 WORKDIR /app
 
-# Install dependencies
+# 필요한 파일들을 컨테이너 내부로 복사
 COPY requirements.txt requirements.txt
-RUN pip install -r requirements.txt
-
-# Copy application code
 COPY . .
 
-# Expose port 5000 (or any other port your Flask app is running on)
-EXPOSE 5000
+# 필요한 패키지 설치
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Command to run the Flask application
-CMD ["python", "app.py", "--host", "0.0.0.0", "--port", "5000"]
+# JVM 설치 (OpenJDK 11)
+RUN apt-get update && apt-get install -y openjdk-11-jre-headless
+
+# 환경 변수 설정 (필요시)
+ENV JAVA_OPTS="-Xmx1024m -Xms512m"
+
+# Flask 서버 실행
+CMD ["flask", "run", "--host=0.0.0.0"]
