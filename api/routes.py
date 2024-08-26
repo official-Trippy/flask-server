@@ -83,8 +83,9 @@ def recommend():
         extracted_keywords = extract_keyword(data)
 
         # 결과 출력'
-        print(','.join(extracted_keywords))
-        return extracted_keywords
+        result = ','.join(extracted_keywords)
+        print(result)
+        return Response(result, content_type='text/plain; charset=utf-8')
         # print(f"Extracted Keywords: {', '.join(extracted_keywords)}")  # 전체 키워드를 출력
         #
         # return jsonify({"message": "Recommendation processed"}), 200
