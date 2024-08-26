@@ -1,14 +1,16 @@
-# Set working directory
+# Dockerfile
+FROM python:3.10-slim
+
 WORKDIR /app
 
-# Install Flask (and any other Python dependencies)
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Install dependencies
+COPY requirements.txt requirements.txt
+RUN pip install -r requirements.txt
 
-# Copy the Flask application code
+# Copy application code
 COPY . .
 
-# Expose the port that Flask will run on
+# Expose port 5000 (or any other port your Flask app is running on)
 EXPOSE 5000
 
 # Command to run the Flask application
