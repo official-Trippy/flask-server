@@ -7,5 +7,3 @@ flask-sqlalchemy
 pymysql
 cryptography
 scikit-learn
-mecab-python3
-py4j
