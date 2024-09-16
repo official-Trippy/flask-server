@@ -7,3 +7,4 @@ flask-sqlalchemy
 pymysql
 cryptography
 scikit-learn
+chardet

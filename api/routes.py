@@ -3,8 +3,9 @@ import json
 from .weather import get_weather_list, get_nearest_location, read_branch, check_country, get_weather_info
 from response_dto import ReasonDTO, ErrorReasonDTO
 from .country import get_country_data, get_full_address
-# from .recommend import  extract_keyword
 from urllib.parse import unquote
+from .areaRecommend import process_area
+from .interestPost import search_posts_function
 
 api_bp = Blueprint('api', __name__)
 
@@ -98,3 +99,69 @@ def location():
 #             'message': 'INTERNAL_SERVER_ERROR',
 #             'detail': error_msg
 #         }), 500
+
+@api_bp.route('/find_area', methods=['GET'])
+def find_area():
+    try:
+        input_value = request.args.get('input')
+        if not input_value:
+            return jsonify({
+                'success': False,
+                'error_code': 'COMMON400',
+                'message': 'BAD_REQUEST',
+                'detail': 'Input parameter is missing'
+            }), 400
+
+        # 지역 검색 및 필터링된 데이터 가져오기
+        matching_results = process_area(input_value)
+
+        if not matching_results:
+            return jsonify({
+                'success': False,
+                'error_code': 'DATA_NOT_FOUND',
+                'message': 'No matching data found'
+            }), 404
+
+        # JSON 직렬화 가능한 형태로 반환
+        print("Matching Results:", matching_results)
+        return jsonify(matching_results)
+
+    except Exception as e:
+        error_msg = f"Unexpected error occurred: {str(e)}"
+        return jsonify({
+            'success': False,
+            'error_code': 'COMMON500',
+            'message': 'INTERNAL_SERVER_ERROR',
+            'detail': error_msg
+        }), 500
+
+@api_bp.route('/interest_posts', methods=['GET'])
+def search_posts():
+    try:
+        # 쿼리 파라미터로 interest와 post_type 받기
+        interest = request.args.get('interest')
+        post_type = request.args.get('post_type')
+
+        if not interest or not post_type:
+            return jsonify({
+                'success': False,
+                'error_code': 'COMMON400',
+                'message': 'BAD_REQUEST',
+                'detail': 'Interest or post_type parameter is missing'
+            }), 400
+
+        # Elasticsearch에 요청 보내기
+        post_ids = search_posts_function(interest, post_type)
+
+        return jsonify({
+            'success': True,
+            'post_ids': post_ids
+        })
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error_code': 'COMMON500',
+            'message': 'INTERNAL_SERVER_ERROR',
+            'detail': str(e)
+        }), 500
