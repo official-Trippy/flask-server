@@ -136,11 +136,12 @@ def find_area():
         }), 500
 
 @api_bp.route('/interest_posts', methods=['GET'])
-def search_posts():
+def interest_posts():
     try:
         # 쿼리 파라미터로 interest와 post_type 받기
         interest = request.args.get('interest')
         post_type = request.args.get('post_type')
+        member_idx = request.args.get('member_idx')
 
         if not interest or not post_type:
             return jsonify({
@@ -151,7 +152,7 @@ def search_posts():
             }), 400
 
         # Elasticsearch에 요청 보내기
-        post_ids = search_posts_function(interest, post_type)
+        post_ids = search_posts_function(interest, post_type, member_idx)
 
         return jsonify({
             'success': True,

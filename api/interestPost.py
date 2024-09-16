@@ -8,7 +8,7 @@ load_dotenv()
 
 elasticsearch_url = os.getenv('ELASTICSEARCH_URL')
 
-def search_posts_function(interest, post_type):
+def search_posts_function(interest, post_type, member_idx):
     try:
         query = {
             "_source": ["post_id"],
@@ -19,7 +19,7 @@ def search_posts_function(interest, post_type):
                         {"match": {"post_type": post_type}}
                     ],
                     "must_not": [
-                        {"term": {"member_idx": 2}}
+                        {"term": {"member_idx": member_idx}}
                     ]
                 }
             }
