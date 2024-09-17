@@ -25,7 +25,7 @@ def search_posts_function(interest, post_type, member_idx):
             }
         }
 
-        response = requests.post(elasticsearch_url, json=query)
+        response = requests.post(f"{elasticsearch_url}/mysql_data_index/_search", json=query)
         response.raise_for_status()  # HTTP 에러 체크
 
         es_data = response.json()
