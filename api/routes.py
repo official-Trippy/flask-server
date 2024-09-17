@@ -104,6 +104,8 @@ def location():
 def find_area():
     try:
         input_value = request.args.get('input')
+        decoded_input = unquote(input_value)
+        # print(f"Received input (decoded): {decoded_input}")
         if not input_value:
             return jsonify({
                 'success': False,
@@ -113,7 +115,7 @@ def find_area():
             }), 400
 
         # 지역 검색 및 필터링된 데이터 가져오기
-        matching_results = process_area(input_value)
+        matching_results = process_area(decoded_input)
 
         if not matching_results:
             return jsonify({
@@ -123,7 +125,7 @@ def find_area():
             }), 404
 
         # JSON 직렬화 가능한 형태로 반환
-        print("Matching Results:", matching_results)
+        # print("Matching Results:", matching_results)
         return jsonify(matching_results)
 
     except Exception as e:

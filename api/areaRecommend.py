@@ -19,7 +19,7 @@ area_key = os.getenv('AREA_API_KEY')
 
 def fetch_location_data(areaCd, signguCd):
     url = f'{area_url}?serviceKey={area_key}&numOfRows=20&pageNo=1&MobileOS=ETC&MobileApp=AppTest&baseYm=202408&areaCd={areaCd}&signguCd={signguCd}'
-    print("요청 URL:", url)
+   # print("요청 URL:", url)
     # print("요청 파라미터:", params)
     try:
         response = requests.get(url)
@@ -47,7 +47,7 @@ def parse_xml_and_filter(xml_data):
         items = root.find('.//items')
 
         if items is None:
-            print("items 태그를 찾을 수 없습니다.")
+            # print("items 태그를 찾을 수 없습니다.")
             return filtered_items
 
         for item in items.findall('item'):
@@ -60,7 +60,8 @@ def parse_xml_and_filter(xml_data):
                 hubRank_value = int(hubRank.text)
                 hubTatsNm_text = hubTatsNm.text
 
-                if hubCtgryMclsNm_text == "문화관광" and hubRank_value <= 20:
+                # if hubCtgryMclsNm_text == "문화관광" and hubRank_value <= 20:
+                if hubCtgryMclsNm_text != "숙박" and hubRank_value <= 20:
                     # Element가 아닌 딕셔너리로 데이터를 변환하여 추가
                     filtered_items.append({
                         'hubCtgryMclsNm': hubCtgryMclsNm_text,
@@ -79,34 +80,44 @@ def find_matching_area(input_value, csv_path):
     # areaNm과 sigunguNm을 모두 검사
     df = pd.read_csv(csv_path, encoding='utf-8')
 
-    # areaNm에서 첫 번째 일치하는 값 찾기
+    matching_areas = []
+
+    # areaNm에서 일치하는 값 찾기
     for index, row in df.iterrows():
         if input_value in row['areaNm']:
-            return pd.DataFrame([{'areaCd': row['areaCd'], 'sigunguCd': row['sigunguCd']}])
+            matching_areas.append({'areaCd': row['areaCd'], 'sigunguCd': row['sigunguCd']})
 
     # areaNm에서 일치하는 값이 없을 경우 sigunguNm에서 찾기
-    for index, row in df.iterrows():
-        if input_value in row['sigunguNm']:
-            return pd.DataFrame([{'areaCd': row['areaCd'], 'sigunguCd': row['sigunguCd']}])
+    if not matching_areas:
+        for index, row in df.iterrows():
+            if input_value in row['sigunguNm']:
+                matching_areas.append({'areaCd': row['areaCd'], 'sigunguCd': row['sigunguCd']})
 
-    # 일치하는 값이 없는 경우 빈 DataFrame 반환
-    return pd.DataFrame()
+    # 일치하는 값이 없는 경우 빈 리스트 반환
+    return matching_areas
+
 
 def process_area(input_value):
-    matching_area = find_matching_area(input_value, 'areaCode.csv')
+    matching_areas = find_matching_area(input_value, 'areaCode.csv')
 
-    if not matching_area.empty:
-        all_filtered_items = []
-        for _, row in matching_area.iterrows():
-            areaCd = row['areaCd']
-            sigunguCd = row['sigunguCd']
-            xml_data = fetch_location_data(areaCd, sigunguCd)
-            if xml_data:
-                filtered_items = parse_xml_and_filter(xml_data)
-                all_filtered_items.extend(filtered_items)
+    if matching_areas:
+        # 랜덤으로 하나의 area만 선택
+        selected_area = random.choice(matching_areas)
+        areaCd = selected_area['areaCd']
+        sigunguCd = selected_area['sigunguCd']
 
-        # Return or process filtered items as needed
-        return all_filtered_items
+        # 선택된 area에 대해 데이터 요청
+        xml_data = fetch_location_data(areaCd, sigunguCd)
+        if xml_data:
+            filtered_items = parse_xml_and_filter(xml_data)
+
+            # 필터링된 데이터를 반환 (최대 10개)
+            if len(filtered_items) > 10:
+                return random.sample(filtered_items, 10)
+            else:
+                return filtered_items
     else:
-        print("Matching area not found.")
+        # print("Matching area not found.")
+        return []
+        # print("Matching area not found.")
         return []
