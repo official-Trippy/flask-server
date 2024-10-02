@@ -76,5 +76,5 @@ jobs:
           sudo docker rm -f $(docker ps -qa)
           docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:latest
           cd /path/to/your/docker-compose-directory
-          sudo docker-compose up -d database redis blue flask-app nginx certbot elasticsearch logstash
+          sudo docker-compose up -d flask-app
           sudo docker image prune -f
