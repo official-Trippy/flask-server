@@ -44,6 +44,7 @@ def weather():
     except Exception as e:
         # 예외 처리
         error_msg = f"Unexpected error occurred: {str(e)}"
+        print(error_msg)
         dto = ErrorReasonDTO(False, "COMMON500", "INTERNAL_SERVER_ERROR", error_msg)
         return "500"
 
@@ -66,6 +67,7 @@ def location():
     except Exception as e:
         # 예외 처리
         error_msg = f"Unexpected error occurred: {str(e)}"
+        print(error_msg)
         return jsonify({
             'success': False,
             'error_code': 'COMMON500',
@@ -130,6 +132,7 @@ def find_area():
 
     except Exception as e:
         error_msg = f"Unexpected error occurred: {str(e)}"
+        print(error_msg)
         return jsonify({
             'success': False,
             'error_code': 'COMMON500',
@@ -162,6 +165,7 @@ def interest_posts():
         })
 
     except Exception as e:
+        print(error_msg)
         return jsonify({
             'success': False,
             'error_code': 'COMMON500',
