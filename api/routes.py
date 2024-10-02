@@ -30,7 +30,8 @@ def weather():
         # 날씨 정보 요청
         weather_response = get_weather_list(nearest_branch['branch'], date)
         if weather_response.status_code != 200:
-            dto = ErrorReasonDTO(False, "WEATHER4002", "ERROR_WHILE_GET_WEATHER")
+            # dto = ErrorReasonDTO(False, "WEATHER4002", "ERROR_WHILE_GET_WEATHER")
+            print("error = " + str(weather_response))
             return "500"
 
         # 날씨 데이터 추출 및 처리
@@ -44,8 +45,8 @@ def weather():
     except Exception as e:
         # 예외 처리
         error_msg = f"Unexpected error occurred: {str(e)}"
-        print(error_msg)
-        dto = ErrorReasonDTO(False, "COMMON500", "INTERNAL_SERVER_ERROR", error_msg)
+        print("error = " + error_msg)
+        # dto = ErrorReasonDTO(False, "COMMON500", "INTERNAL_SERVER_ERROR", error_msg)
         return "500"
 
 @api_bp.route('/location', methods=['GET'])
